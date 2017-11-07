@@ -3,11 +3,14 @@
 
 import Vue from 'vue';
 
+import * as firebase from 'firebase';
+
 import Vuetify from 'vuetify';
 import './stylus/main.styl';
 
 import App from './App';
 import router from './router';
+
 
 Vue.use(Vuetify);
 
@@ -19,4 +22,14 @@ new Vue({
   router,
   template: '<App/>',
   components: { App },
+  created() {
+    firebase.initializeApp({
+      apiKey: 'AIzaSyA2sq3ry3qb5TpJvsY9HKbrlIcNY21oKP4',
+      authDomain: 'experiment-514e7.firebaseapp.com',
+      databaseURL: 'https://experiment-514e7.firebaseio.com',
+      projectId: 'experiment-514e7',
+      storageBucket: 'experiment-514e7.appspot.com',
+      messagingSenderId: '980710858649',
+    });
+  },
 });

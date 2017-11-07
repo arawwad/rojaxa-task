@@ -2,9 +2,11 @@
   <v-app>
     <v-navigation-drawer
       persistent
-      :mini-variant.sync="miniVariant"
+      :mini-variant="miniVariant"
       :clipped="clipped"
       v-model="drawer"
+      class="drawer"
+      dark
       enable-resize-watcher
       app
     >
@@ -21,9 +23,10 @@
             <v-list-tile-title v-text="item.title"></v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+        <v-divider></v-divider>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar fixed app :clipped-left="clipped">
+    <v-toolbar fixed app :clipped-left="clipped" class="toolbar">
       <v-toolbar-title v-text="title"></v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn icon @click.stop="rightDrawer = !rightDrawer">
@@ -33,6 +36,9 @@
     <main>
       <v-content>
         <v-container fluid>
+            <v-btn round color="primary" dark>Rounded Button</v-btn>
+          <v-btn round color="primary" dark>Rounded Button</v-btn>
+          <v-btn round color="primary" dark>Rounded Button</v-btn>
         </v-container>
       </v-content>
     </main>
@@ -46,10 +52,7 @@
         clipped: true,
         drawer: true,
         fixed: false,
-        items: [{
-          icon: 'bubble_chart',
-          title: 'Inspire',
-        }],
+        items: [],
         miniVariant: true,
         right: null,
         rightDrawer: false,
@@ -59,3 +62,18 @@
   };
 
 </script>
+
+<style>
+  .drawer {
+    width: 110px;
+    height: 1070.3px;
+    background-image: linear-gradient(to bottom, #00d6fd, #00acfa);
+    box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .toolbar {
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+  }
+
+</style>
