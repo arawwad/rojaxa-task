@@ -6,9 +6,9 @@ Vue.use(Vuex);
 
 export const store = new Vuex.Store({
   state: {
-    DailyTasks: [],
+    dailyTasks: [],
     onProgressTasks: [],
-    DoneTasks: []
+    doneTasks: []
   },
   mutations: {
 

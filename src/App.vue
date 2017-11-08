@@ -26,8 +26,8 @@
         <v-divider></v-divider>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar fixed app :clipped-left="clipped" class="toolbar">
-      <v-toolbar-title v-text="title"></v-toolbar-title>
+    <v-toolbar  app :clipped-left="clipped" class="toolbar">
+      <img src="../public/logo.svg" alt="logo" class="logo">
       <v-spacer></v-spacer>
       <v-btn icon @click.stop="rightDrawer = !rightDrawer">
         <v-icon>menu</v-icon>
@@ -35,10 +35,17 @@
     </v-toolbar>
     <main>
       <v-content>
-        <v-container fluid>
+        <v-container fluid class="text-center">
+          <v-layout>
             <v-btn round color="primary" dark>Rounded Button</v-btn>
-          <v-btn round color="primary" dark>Rounded Button</v-btn>
-          <v-btn round color="primary" dark>Rounded Button</v-btn>
+            <v-btn round color="primary" dark>Rounded Button</v-btn>
+            <v-spacer></v-spacer>
+            <input type="text"/>
+          </v-layout>
+          <v-layout row wrap justify-center>
+            <column v-for="column in displayedColumns" :key="column">
+            </column>
+          </v-layout>
         </v-container>
       </v-content>
     </main>
@@ -46,6 +53,8 @@
 </template>
 
 <script>
+  import Column from './components/Column';
+
   export default {
     data() {
       return {
@@ -57,7 +66,13 @@
         right: null,
         rightDrawer: false,
         title: 'Logo',
+        displayedColumns: [{},
+          {},
+          {}],
       };
+    },
+    components: {
+      Column,
     },
   };
 
@@ -74,6 +89,12 @@
   .toolbar {
     background-color: #ffffff;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+  }
+
+  .logo {
+    width: 46px;
+    height: 48px;
+    object-fit: contain;
   }
 
 </style>
