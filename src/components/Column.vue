@@ -1,6 +1,6 @@
 <template>
   <v-flex xs8 md4>
-    <v-card class="mx-3 my-3 column">
+    <v-card class="mx-3 mt-3 column">
       <div class="column-header">
         <span class="badge">123</span>
         <h5 class="column-title">Daily Tasks</h5>

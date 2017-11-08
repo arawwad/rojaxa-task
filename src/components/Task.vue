@@ -150,4 +150,8 @@
     text-align: left;
     color: #6c6c6c;
   }
+  .attached-image .icon{
+    line-height: 1.2em;
+  }
 </style>
+
