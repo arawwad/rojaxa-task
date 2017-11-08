@@ -89,12 +89,14 @@
   .toolbar {
     background-color: #ffffff;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+    height: 80px;
   }
 
   .logo {
     width: 46px;
     height: 48px;
     object-fit: contain;
+    margin: 25px 0 17px 38px;
   }
 
 </style>
