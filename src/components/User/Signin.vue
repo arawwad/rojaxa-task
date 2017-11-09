@@ -29,6 +29,7 @@
                 class="primary--text mx-0"
                 :disabled="!formIsValid"
               >Sign In</v-btn>
+              <p>{{ error }}</p>
             </v-form>
           </v-card-text>
         </v-card>
@@ -43,6 +44,7 @@
       return {
         email: '',
         password: '',
+        error: '',
       };
     },
     computed: {
@@ -51,6 +53,10 @@
       },
       user() {
         return this.$store.getters.user;
+      },
+      signError() {
+        this.error = this.$store.getters.signError;
+        return this.$store.getters.signError;
       },
     },
     watch: {

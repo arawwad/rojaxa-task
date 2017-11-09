@@ -11,11 +11,14 @@ export default {
       onProgressTasks: [],
       doneTasks: [],
       user: null,
+      signError: null,
     },
     mutations: {
       setUser(state, payload) {
         state.user = payload; // eslint-disable-line no-param-reassign
-        console.log(state.user); // eslint-disable-line no-console
+      },
+      setError(state, payload) {
+        state.signError = payload; // eslint-disable-line no-param-reassign
       },
     },
     actions: {
@@ -28,7 +31,9 @@ export default {
               id: user.uid,
             };
             commit('setUser', newUser);
-          }).catch(error => console.log(error));
+          }).catch((error) => {
+            commit('setError', error.message);
+          });
       },
       signin({ commit }, payload) {
         firebase
@@ -39,12 +44,17 @@ export default {
               id: user.uid,
             };
             commit('setUser', newUser);
+          }).catch((error) => {
+            commit('setError', error.message);
           });
       },
     },
     getters: {
       user(state) {
         return state.user;
+      },
+      signError(state) {
+        return state.signError;
       },
     },
   }),

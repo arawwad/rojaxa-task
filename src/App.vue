@@ -15,10 +15,13 @@
           v-for="(item, i) in items"
           :key="i"
         >
-         <router-link :to="item.link" tag='div' class="link">
+         <router-link :to="item.link" tag='span' class="link">
            <v-list-tile-action>
-             <v-icon v-html="item.icon"></v-icon>
-             <p>{{ item.name }}</p>
+             <v-badge color="red" overlap>
+               <span slot="badge" v-if="item.badge">{{ item.badge }}</span>
+               <v-icon v-html="item.icon"></v-icon>
+             </v-badge>
+               <p>{{ item.name }}</p>
              <div class="drawer-divider"></div>
            </v-list-tile-action>
          </router-link>
@@ -75,6 +78,7 @@
             name: 'Option 1',
             icon: 'sync',
             link: 'option1',
+            badge: 3,
           },
           {
             name: 'Option 2',
@@ -134,7 +138,7 @@
 
   .drawer .list .list__tile .link{
     opacity: 0.53;
-    margin:0 auto;
+    margin: 0 auto;
   }
 
   .drawer .list .list__tile .link.router-link-exact-active {
@@ -146,12 +150,18 @@
     display: block;
   }
 
+  .drawer .list .list__tile .list__tile__action{
+    align-items: flex-start;
+  }
+
   .drawer .list .list__tile p {
     margin: 0px auto;
     font-family: OpenSans;
     font-size: 14px;
     letter-spacing: -0.3px;
   }
+
+
 
   .drawer .list .list__tile .drawer-divider {
     margin: 40px auto 0 auto;

@@ -35,6 +35,7 @@
                     class="primary--text mx-0"
                     :disabled="!formIsValid"
                     >Sign Up</v-btn>
+                <p>{{error}}</p>
               </v-form>
           </v-card-text>
         </v-card>
@@ -50,6 +51,7 @@
         email: '',
         password: '',
         confirmPassword: '',
+        error: '',
       };
     },
     computed: {
@@ -57,10 +59,14 @@
         return this.password !== this.confirmPassword ? 'Confirmed password doesn\'t match the password' : true;
       },
       formIsValid() {
-        return this.email !== '' && this.password !== '' && this.passwordIsConfirmed;
+        return this.email !== '' && this.password !== '' && this.password === this.confirmPassword;
       },
       user() {
         return this.$store.getters.user;
+      },
+      signError() {
+        this.error = this.$store.getters.signError;
+        return this.$store.getters.signError;
       },
     },
     watch: {
