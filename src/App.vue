@@ -15,11 +15,13 @@
           v-for="(item, i) in items"
           :key="i"
         >
-          <v-list-tile-action>
-            <v-icon v-html="item.icon"></v-icon>
-            <p>{{ item.name }}</p>
-            <div class="drawer-divider"></div>
-          </v-list-tile-action>
+         <router-link :to="item.link" tag='div' class="link">
+           <v-list-tile-action>
+             <v-icon v-html="item.icon"></v-icon>
+             <p>{{ item.name }}</p>
+             <div class="drawer-divider"></div>
+           </v-list-tile-action>
+         </router-link>
           <v-list-tile-content>
             <v-list-tile-title v-text="item.title"></v-list-tile-title>
           </v-list-tile-content>
@@ -34,70 +36,77 @@
         <v-icon>menu</v-icon>
       </v-btn>
     </v-toolbar>
-    <main>
-      <v-content>
-        <v-container fluid class="text-center">
-          <v-layout>
-            <v-btn round color="primary" dark>Rounded Button</v-btn>
-            <v-btn round color="primary" dark>Rounded Button</v-btn>
-            <v-spacer></v-spacer>
-            <input type="text"/>
-          </v-layout>
-          <v-layout row wrap justify-center>
-            <column v-for="column in displayedColumns" :key="column">
-            </column>
-          </v-layout>
-        </v-container>
-      </v-content>
-    </main>
+    <router-view>
+    </router-view>
   </v-app>
 </template>
 
 <script>
-  import Column from './components/Column';
-
   export default {
     data() {
       return {
         clipped: true,
         drawer: true,
         fixed: false,
-        items: [{
-          name: 'Home',
-          icon: 'home',
-        },
-        {
-          name: 'New Task',
-          icon: 'note_add',
-
-        },
-        {
-          name: 'Option 1',
-          icon: 'sync',
-
-        },
-        {
-          name: 'Option 2',
-          icon: 'timeline',
-        },
-        ],
         miniVariant: true,
         right: null,
         rightDrawer: false,
         title: 'Logo',
-        displayedColumns: [{},
-          {},
-          {}],
       };
     },
-    components: {
-      Column,
+    computed: {
+      userIsAuthenticated() {
+        const user = this.$store.getters.user;
+        return user !== null && user !== undefined;
+      },
+      items() {
+        if (this.userIsAuthenticated) {
+          return [{
+            name: 'Home',
+            icon: 'home',
+            link: '/',
+          },
+          {
+            name: 'New Task',
+            icon: 'note_add',
+            link: '/new',
+          },
+          {
+            name: 'Option 1',
+            icon: 'sync',
+            link: 'option1',
+          },
+          {
+            name: 'Option 2',
+            icon: 'timeline',
+            link: 'option2',
+          },
+          ];
+        }
+        return [
+            { icon: 'face', name: 'Sign up', link: '/signup' },
+            { icon: 'lock_open', name: 'Sign in', link: '/signin' },
+        ];
+      },
     },
   };
 
 </script>
 
 <style>
+
+  .toolbar {
+    background-color: #ffffff !important;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+    height: 80px;
+  }
+
+  .logo {
+    width: 46px;
+    height: 48px;
+    object-fit: contain;
+    margin: 25px 0 17px 38px;
+  }
   .drawer {
     width: 110px;
     height: 716px !important;
@@ -112,11 +121,24 @@
     height: 100%;
   }
 
+  .drawer .link {
+    cursor: pointer;
+  }
+
   .drawer .list .list__tile {
     width: 40px;
     height: 50px;
     margin-bottom: 90px;
     color: #fff;
+  }
+
+  .drawer .list .list__tile .link{
+    opacity: 0.53;
+    margin:0 auto;
+  }
+
+  .drawer .list .list__tile .link.router-link-exact-active {
+    opacity:1 ;
   }
 
   .drawer .list .list__tile .icon {
@@ -138,19 +160,6 @@
     background-color: #fff;
     border: 0.3px solid #fff;
     opacity: .53;
-  }
-
-  .toolbar {
-    background-color: #ffffff !important;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
-    height: 80px;
-  }
-
-  .logo {
-    width: 46px;
-    height: 48px;
-    object-fit: contain;
-    margin: 25px 0 17px 38px;
   }
 
 </style>

@@ -10,6 +10,7 @@ import './stylus/main.styl';
 
 import App from './App';
 import router from './router';
+import store from './store';
 
 
 Vue.use(Vuetify);
@@ -20,6 +21,7 @@ Vue.config.productionTip = false;
 new Vue({
   el: '#app',
   router,
+  store: store.store,
   template: '<App/>',
   components: { App },
   created() {
@@ -31,5 +33,6 @@ new Vue({
       storageBucket: 'experiment-514e7.appspot.com',
       messagingSenderId: '980710858649',
     });
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
   },
 });
