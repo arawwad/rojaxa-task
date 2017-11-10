@@ -40,11 +40,6 @@
         return this.$store.getters.user;
       },
     },
-    created() {
-      if (this.user === null || this.user === undefined) {
-        this.$router.push('/signin');
-      }
-    },
   };
 
 </script>
