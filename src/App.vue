@@ -15,16 +15,16 @@
           v-for="(item, i) in items"
           :key="i"
         >
-         <router-link :to="item.link" tag='span' class="link">
-           <v-list-tile-action>
-             <v-badge color="red" overlap>
-               <span slot="badge" v-if="item.badge">{{ item.badge }}</span>
-               <v-icon v-html="item.icon"></v-icon>
-             </v-badge>
-               <p>{{ item.name }}</p>
-             <div class="drawer-divider"></div>
-           </v-list-tile-action>
-         </router-link>
+          <router-link :to="item.link" tag='span' class="link">
+            <v-list-tile-action>
+              <v-badge color="red" overlap>
+                <span slot="badge" v-if="item.badge">{{ item.badge }}</span>
+                <v-icon v-html="item.icon"></v-icon>
+              </v-badge>
+              <p>{{ item.name }}</p>
+              <div class="drawer-divider"></div>
+            </v-list-tile-action>
+          </router-link>
           <v-list-tile-content>
             <v-list-tile-title v-text="item.title"></v-list-tile-title>
           </v-list-tile-content>
@@ -35,8 +35,9 @@
     <v-toolbar app :clipped-left="clipped" class="toolbar">
       <img src="../public/logo.svg" alt="logo" class="logo">
       <v-spacer></v-spacer>
-      <v-btn icon @click.stop="rightDrawer = !rightDrawer">
-        <v-icon>menu</v-icon>
+      <p v-if="user" class="user-email">{{user.email}}</p>
+      <v-btn v-if="user" icon @click="signOut">
+        <v-icon>highlight_off</v-icon>
       </v-btn>
     </v-toolbar>
     <router-view>
@@ -57,10 +58,17 @@
         title: 'Logo',
       };
     },
+    methods: {
+      signOut() {
+        this.$store.dispatch('signOut');
+      },
+    },
     computed: {
+      user() {
+        return this.$store.getters.user;
+      },
       userIsAuthenticated() {
-        const user = this.$store.getters.user;
-        return user !== null && user !== undefined;
+        return this.user !== null && this.user !== undefined;
       },
       items() {
         if (this.userIsAuthenticated) {
@@ -88,10 +96,22 @@
           ];
         }
         return [
-            { icon: 'face', name: 'Sign up', link: '/signup' },
-            { icon: 'lock_open', name: 'Sign in', link: '/signin' },
+          { icon: 'face', name: 'Sign up', link: '/signup' },
+          { icon: 'lock_open', name: 'Sign in', link: '/signin' },
         ];
       },
+    },
+    watch: {
+      user() {
+        if (this.user === null || this.user === undefined) {
+          this.$router.push('/signin');
+        }
+      },
+    },
+    created() {
+      if (this.user === null || this.user === undefined) {
+        this.$router.push('/signin');
+      }
     },
   };
 
@@ -111,6 +131,17 @@
     object-fit: contain;
     margin: 25px 0 17px 38px;
   }
+
+  .user-email {
+    font-family: OpenSans;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    text-align: left;
+    color: #262941;
+    margin-top: 12px;
+  }
+
   .drawer {
     width: 110px;
     height: 716px !important;
@@ -136,13 +167,13 @@
     color: #fff;
   }
 
-  .drawer .list .list__tile .link{
+  .drawer .list .list__tile .link {
     opacity: 0.53;
     margin: 0 auto;
   }
 
   .drawer .list .list__tile .link.router-link-exact-active {
-    opacity:1 ;
+    opacity: 1;
   }
 
   .drawer .list .list__tile .icon {
@@ -150,7 +181,7 @@
     display: block;
   }
 
-  .drawer .list .list__tile .list__tile__action{
+  .drawer .list .list__tile .list__tile__action {
     align-items: flex-start;
   }
 
@@ -160,8 +191,6 @@
     font-size: 14px;
     letter-spacing: -0.3px;
   }
-
-
 
   .drawer .list .list__tile .drawer-divider {
     margin: 40px auto 0 auto;

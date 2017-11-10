@@ -6,7 +6,7 @@
         <v-card>
           <v-layout justify-center>
             <v-flex xs10 my-3>
-              <v-form v-model="valid" ref="form" lazy-validation>
+              <v-form  ref="form" >
                 <v-text-field
                   label="Task Name"
                   v-model="taskName"
@@ -40,6 +40,7 @@
                         v-model="date"
                         prepend-icon="event"
                         readonly
+                        required
                       ></v-text-field>
                       <v-date-picker  v-model="date" scrollable actions>
                         <template slot-scope="{ save, cancel }">
@@ -52,7 +53,6 @@
                       </v-date-picker>
                     </v-dialog>
                   </v-flex>
-                  <v-spacer></v-spacer>
                   <v-flex xs5>
                     <v-dialog
                       persistent
@@ -87,9 +87,12 @@
                 <v-text-field
                 label="Additional Details"
                 v-model="additionalDetails"
-                v-
                 multi-line
-              ></v-text-field>
+                ></v-text-field>
+                <v-btn v-if="!this.image" @click="pickFile">Upload Image</v-btn>
+                <input type="file" @change="filePicked" style="display: none;" accept="image/png" ref="fileInput">
+                <img :src="this.imageUrl"  style="width: 150px;">
+                <v-spacer></v-spacer>
                 <v-btn
                   @click="submit"
                   :disabled="!valid"
@@ -118,11 +121,57 @@
         locationTo: '',
         infoDisplaying: '',
         additionalDetails: '',
+        image: null,
+        imageUrl: '',
         date: null,
-        time: null,
+        time: '',
         modal: false,
         modal2: false,
       };
+    },
+    methods: {
+      pickFile() {
+        this.$refs.fileInput.click();
+      },
+      filePicked(event) {
+        const files = event.target.files;
+        const fileReader = new FileReader();
+        fileReader.addEventListener('load', () => {
+          this.imageUrl = fileReader.result;
+        });
+        fileReader.readAsDataURL(files[0]);
+        this.image = files[0];
+      },
+      submit() {
+        const task = {
+          taskName: this.taskName,
+          locationFrom: this.locationFrom,
+          locationTo: this.locationTo,
+          infoDisplaying: this.infoDisplaying,
+          additionalDetails: this.additionalDetails,
+          image: this.image,
+          date: this.date,
+          time: this.time,
+        };
+        this.$store.dispatch('createTask', task);
+        this.$router.push('/');
+      },
+      clear() {
+        this.taskName = '';
+        this.locationFrom = '';
+        this.locationTo = '';
+        this.infoDisplaying = '';
+        this.additionalDetails = '';
+        this.image = '';
+        this.imageUrl = '';
+        this.date = '';
+        this.time = '';
+      },
+    },
+    computed: {
+      valid() {
+        return this.TaskName !== '' && this.date !== '';
+      },
     },
   };
 </script>
