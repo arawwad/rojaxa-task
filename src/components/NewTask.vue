@@ -6,7 +6,7 @@
         <v-card>
           <v-layout justify-center>
             <v-flex xs10 my-3>
-              <v-form  ref="form" >
+              <v-form  ref="form">
                 <v-text-field
                   label="Task Name"
                   v-model="taskName"
@@ -121,7 +121,7 @@
         locationTo: '',
         infoDisplaying: '',
         additionalDetails: '',
-        image: null,
+        image: '',
         imageUrl: '',
         date: null,
         time: '',

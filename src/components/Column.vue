@@ -2,13 +2,15 @@
   <v-flex xs8 md4>
     <v-card class="mx-3 mt-3 column">
       <div class="column-header">
-        <span class="badge">123</span>
-        <h5 class="column-title">Daily Tasks</h5>
-        <v-icon class="column-icon">bug_report</v-icon>
+        <span class="badge">{{ columnDetails.numberOfTasks }}</span>
+        <h5 class="column-title">{{ columnDetails.name }}</h5>
+        <v-icon class="column-icon">{{ columnDetails.icon }}</v-icon>
       </div>
       <div class="column-divider"></div>
       <draggable v-model="myArray" class="drag-wrapper" :options="{group:'tasks'}">
-        <task v-for="element in myArray" :key="element.id" class="item"></task>
+        <transition-group name="list" tag="div" class="drag-wrapper">
+        <task v-for="(task,i) in tasks" :task="task"  :key="i" class="item"></task>
+        </transition-group>
       </draggable>
     </v-card>
   </v-flex>
@@ -27,10 +29,13 @@
     data() {
       return {
         myArray: [
-          { id: 12, name: 'abdo' },
-          { id: 12, name: 'abdallah' },
+          { order: 0, name: 'abdo' },
         ],
       };
+    },
+    props: ['columnDetails', 'tasks'],
+    created() {
+      console.log(this.columnDetails);
     },
   };
 </script>
@@ -100,5 +105,9 @@
 
   .drag-wrapper {
     height: 80%;
+  }
+
+  .list-move {
+    transition: transform 1s;
   }
 </style>

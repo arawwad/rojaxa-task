@@ -4,10 +4,10 @@
       <v-card class="task">
         <v-card-title primary-title>
           <div>
-            <h3 class="headline mb-0">task title</h3>
-            <div class="details" >id/data/time</div>
+            <h3 class="headline mb-0">{{ task.taskName }}</h3>
+            <div class="details" >{{ task.date }} / {{ task.time }}</div>
             <div class="card-divider" style="background-color: #f7115e;"></div>
-            <div class="location">
+            <div class="location" v-if="task.locationFrom && task.locationTo">
               <div class="location-helper">
                 <div class="helper-start"></div>
                 <div class="helper-line"></div>
@@ -15,20 +15,20 @@
               </div>
               <div class="location-text">
                 <p class="location-title">location</p>
-                <p class="location-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus, odio?</p>
+                <p class="location-body">{{ task.locationFrom }}</p>
                 <p class="location-title mt-4">To</p>
-                <p class="location-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Numquam, suscipit.</p>
+                <p class="location-body">{{ task.locationTo }}</p>
               </div>
             </div>
-            <div class="info-displaying">
+            <div class="info-displaying" v-if="task.infoDisplaying">
               <p class="info-displaying-title">Info Displaying</p>
-              <p class="info-displaying-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dignissimos, porro!</p>
+              <p class="info-displaying-text">{{ task.infoDisplaying }}</p>
             </div>
-            <div class="info-displaying">
+            <div class="info-displaying" v-if="task.additionalDetails">
               <p class="info-displaying-title">Additional Details</p>
-              <p class="info-displaying-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dignissimos, porro!</p>
+              <p class="info-displaying-text">{{ task.additionalDetails }}</p>
             </div>
-            <div class="attached-image">
+            <div class="attached-image" v-if="task.imageUrl">
               <p><v-icon>attachment</v-icon> Attchment Screen</p>
             </div>
           </div>
@@ -41,6 +41,7 @@
 <script>
   export default {
     name: 'Task',
+    props: ['task'],
   };
 </script>
 

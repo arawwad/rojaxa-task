@@ -34,5 +34,11 @@ new Vue({
       messagingSenderId: '980710858649',
     });
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.$store.dispatch('autoSignIn', user);
+        this.$store.dispatch('loadTasks');
+      }
+    });
   },
 });

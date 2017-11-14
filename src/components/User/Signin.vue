@@ -29,7 +29,7 @@
                 class="primary--text mx-0"
                 :disabled="!formIsValid"
               >Sign In</v-btn>
-              <p>{{ error }}</p>
+              <p v-text="error"></p>
             </v-form>
           </v-card-text>
         </v-card>
