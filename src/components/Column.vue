@@ -7,11 +7,9 @@
         <v-icon class="column-icon">{{ columnDetails.icon }}</v-icon>
       </div>
       <div class="column-divider"></div>
-        <draggable  class="drag-wrapper" :options="{group:'tasks'}" @add="onAdd" @remove="onRemove">
-        <transition-group name="list" tag="div" class="drag-wrapper" :data-state="columnDetails.state">
-        <task v-for="(task,i) in tasks" :task="task" :data-index="task.index" :key="i" class="item" ></task>
+        <transition-group name="list" tag="div" class="drag-wrapper" :data-state="columnDetails.state" @drop.native="onAdd" @dragover.native.prevent="">
+        <task v-for="(task,i) in tasks" :task="task" :data-index="task.index" :key="i" class="item" draggable="true" @dragstart.native="dragStart"></task>
         </transition-group>
-      </draggable>
     </v-card>
   </v-flex>
 </template>
@@ -36,12 +34,15 @@
     props: ['columnDetails', 'tasks'],
     methods: {
       onAdd(event) {
-        console.log(event.item.dataset.index);
-        this.$store.commit('changeTaskState', { index: event.item.dataset.index, state: event.target.dataset.state });
+        let state = event.target.dataset.state;
+        if (!state) {
+          state = event.target.closest('div.drag-wrapper').dataset.state;
+        }
+        const index = event.dataTransfer.getData('index');
+        this.$store.commit('changeTaskState', { index, state });
       },
-      onRemove(event) {
-        event.preventDefault();
-        console.log(event);
+      dragStart(event) {
+        event.dataTransfer.setData('index', event.target.dataset.index);
       },
     },
   };
