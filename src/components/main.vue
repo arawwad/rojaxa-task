@@ -67,7 +67,6 @@
       },
       queryTasks() {
         this.$store.commit('query', this.queryText);
-        console.log(this.$store.getters.currentDayTasksQueried);
       },
       taskByState(taskState) {
         return this.$store.getters.taskByState(taskState);
@@ -83,17 +82,14 @@
       columnDetails() {
         return this.$store.getters.columnDetails;
       },
-//      currentDayTasks: {
-//        get() {
-//          return this.$store.getters.currentDayTasks;
-//        },
-//        set() {
-//
-//        },
-//      },
-    },
-    created() {
-      console.log(this.$store.getters.taskByState('undone'));
+      currentDayTasks: {
+        get() {
+          return this.$store.getters.currentDayTasks;
+        },
+        set() {
+
+        },
+      },
     },
   };
 

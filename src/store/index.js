@@ -43,6 +43,10 @@ export default {
       query(state, payload) {
         state.queryText = payload; // eslint-disable-line no-param-reassign
       },
+      changeTaskState(state, payload) {
+        state.tasks[state.date][payload.index].state // eslint-disable-line no-param-reassign
+          = payload.state;
+      },
     },
     actions: {
       signup({ commit }, payload) {
@@ -87,9 +91,18 @@ export default {
           .then((data) => {
             const tasks = {};
             const obj = data.val();
+            if (!obj) {
+              commit('setLoading', false);
+              return;
+            }
             Object.keys(obj).forEach((date) => {
               tasks[date] = [];
               Object.keys(obj[date]).forEach(key => tasks[date].push(obj[date][key]));
+              let i = 0;
+              tasks[date].forEach((task) => {
+                task.index = i;  // eslint-disable-line no-param-reassign
+                i += 1;
+              });
             });
             commit('setTasks', tasks);
             commit('setLoading', false);
@@ -153,12 +166,16 @@ export default {
         return state.tasks[state.date];
       },
       currentDayTasksQueried(state, getters) {
-        return getters.currentDayTasks.filter(task =>
-          task.additionalDetails.includes(state.queryText)
-          || task.infoDisplaying.includes(state.queryText)
-          || task.locationFrom.includes(state.queryText)
-          || task.locationTo.includes(state.queryText)
-          || task.taskName.includes(state.queryText));
+        try {
+          return getters.currentDayTasks.filter(task =>
+            task.additionalDetails.includes(state.queryText)
+            || task.infoDisplaying.includes(state.queryText)
+            || task.locationFrom.includes(state.queryText)
+            || task.locationTo.includes(state.queryText)
+            || task.taskName.includes(state.queryText));
+        } catch (e) {
+          return [];
+        }
       },
       taskByState:
         (state, getters) => taskState => getters.currentDayTasksQueried

@@ -7,9 +7,9 @@
         <v-icon class="column-icon">{{ columnDetails.icon }}</v-icon>
       </div>
       <div class="column-divider"></div>
-      <draggable v-model="myArray" class="drag-wrapper" :options="{group:'tasks'}">
-        <transition-group name="list" tag="div" class="drag-wrapper">
-        <task v-for="(task,i) in tasks" :task="task"  :key="i" class="item"></task>
+        <draggable  class="drag-wrapper" :options="{group:'tasks'}" @add="onAdd" @remove="onRemove">
+        <transition-group name="list" tag="div" class="drag-wrapper" :data-state="columnDetails.state">
+        <task v-for="(task,i) in tasks" :task="task" :data-index="task.index" :key="i" class="item" ></task>
         </transition-group>
       </draggable>
     </v-card>
@@ -34,8 +34,15 @@
       };
     },
     props: ['columnDetails', 'tasks'],
-    created() {
-      console.log(this.columnDetails);
+    methods: {
+      onAdd(event) {
+        console.log(event.item.dataset.index);
+        this.$store.commit('changeTaskState', { index: event.item.dataset.index, state: event.target.dataset.state });
+      },
+      onRemove(event) {
+        event.preventDefault();
+        console.log(event);
+      },
     },
   };
 </script>

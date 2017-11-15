@@ -1,7 +1,7 @@
 <template>
   <v-layout>
-    <v-flex xs12>
-      <v-card class="task">
+    <v-flex xs12 >
+      <v-card class="task" >
         <v-card-title primary-title>
           <div>
             <h3 class="headline mb-0">{{ task.taskName }}</h3>
@@ -28,13 +28,25 @@
               <p class="info-displaying-title">Additional Details</p>
               <p class="info-displaying-text">{{ task.additionalDetails }}</p>
             </div>
-            <div class="attached-image" v-if="task.imageUrl">
-              <p><v-icon>attachment</v-icon> Attchment Screen</p>
+            <div class="attached-image" v-if="task.imageUrl" @click="imageDialog = true">
+              <p><v-icon>attachment</v-icon><span class="attached-image-text">Attachment Screen</span></p>
             </div>
           </div>
         </v-card-title>
       </v-card>
     </v-flex>
+    <v-dialog v-model="imageDialog" max-width="500px">
+      <v-card>
+        <v-card-title>
+          Image Attachment
+        </v-card-title>
+        <v-card-media
+          :src="task.imageUrl"
+          height="80vh"
+          contain
+        ></v-card-media>
+      </v-card>
+    </v-dialog>
   </v-layout>
 </template>
 
@@ -42,6 +54,11 @@
   export default {
     name: 'Task',
     props: ['task'],
+    data() {
+      return {
+        imageDialog: false,
+      };
+    },
   };
 </script>
 
@@ -150,6 +167,12 @@
     font-weight: 300;
     text-align: left;
     color: #6c6c6c;
+  }
+  .attached-image {
+    cursor: pointer;
+  }
+  .attched-image-text {
+    text-decoration: underline;
   }
   .attached-image .icon{
     line-height: 1.2em;
