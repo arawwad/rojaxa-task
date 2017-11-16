@@ -14,7 +14,6 @@ export default {
       user: null,
       signError: null,
       date: moment().format('YYYY-MM-DD'),
-      dates: [moment().format('YYYY-MM-DD')],
       typeOfTasks: 'DispalyAllTasks',
       queryText: '',
       loading: false,
@@ -58,16 +57,22 @@ export default {
         firebase
           .auth()
           .createUserWithEmailAndPassword(payload.email, payload.password)
-          .then((user) => {
-            const newUser = {
-              id: user.uid,
-              email: user.email,
-            };
-            commit('setUser', newUser);
-            commit('setLoading', false);
-          }).catch((error) => {
-            commit('setError', error.message);
-          });
+          .then(
+            (user) => {
+              commit('setLoading', false);
+              const newUser = {
+                id: user.uid,
+                registeredMeetups: [],
+              };
+              commit('setUser', newUser);
+            },
+          )
+          .catch(
+            (error) => {
+              commit('setLoading', false);
+              commit('setError', error);
+            },
+          );
       },
       signin({ commit }, payload) {
         commit('setLoading', true);
@@ -90,16 +95,15 @@ export default {
         commit('setUser', null);
       },
       loadTasks({ state, commit }) {
-        commit('setLoading', true);
-        firebase.database().ref('tasks').child(state.user.id).once('value')
-          .then((data) => {
+        try {
+          commit('setLoading', true);
+          firebase.database().ref('tasks').child(state.user.id).on('value', (data) => {
             const tasks = {};
             const obj = data.val();
             if (!obj) {
               commit('setLoading', false);
               return;
             }
-            state.dates.push(Object.keys(obj)); // eslint-disable-line no-param-reassign
             Object.keys(obj).forEach((date) => {
               tasks[date] = [];
               Object.keys(obj[date]).forEach(key => tasks[date].push(obj[date][key]));
@@ -112,6 +116,9 @@ export default {
             commit('setTasks', tasks);
             commit('setLoading', false);
           });
+        } catch (error) {
+          void (0); // eslint-disable-line no-void
+        }
       },
       createTask({ commit, getters }, payload) {
         const task = {
@@ -131,6 +138,9 @@ export default {
           .push(task)
           .then((data) => {
             key = data.key;
+            firebase.database().ref('tasks').child(getters.user.id).child(payload.date)
+              .child(key)
+              .update({ key });
             return key;
           })
           .then(() => {
@@ -144,17 +154,16 @@ export default {
               .child(key)
               .update({ imageUrl });
           })
-          .catch(() => {})
-          .then(() => {
-            commit('createTask', {
-              ...task,
-              imageUrl,
-              id: key,
-            });
-          });
+          .catch(() => {});
       },
       autoSignIn({ commit }, payload) {
         commit('setUser', { id: payload.uid, email: payload.email });
+      },
+      changeTaskState({ state, getters }, payload) {
+        const key = state.tasks[state.date][payload.index].key;
+        firebase.database().ref('tasks').child(getters.user.id).child(state.date)
+          .child(key)
+          .update({ state: payload.state });
       },
     },
     getters: {
@@ -193,7 +202,11 @@ export default {
         };
       },
       dates(state) {
-        return state.dates;
+        let existingDates = Object.keys(state.tasks);
+        if (!existingDates.length) {
+          existingDates = [moment().format('YYYY-MM-DD')];
+        }
+        return existingDates;
       },
     },
   }),

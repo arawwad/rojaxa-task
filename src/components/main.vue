@@ -43,7 +43,7 @@
             ></v-text-field>
           </v-layout>
           <v-layout row wrap justify-center>
-            <column v-for="(column,i) in columnDetails" :tasks="taskByState(column.state)" :columnDetails="column" v-if="displayTypeOfTasks(column.type)">
+            <column v-for="(column,i) in columnDetails" :key="i" :tasks="taskByState(column.state)" :columnDetails="column" v-if="displayTypeOfTasks(column.type)">
             </column>
           </v-layout>
         </v-container>

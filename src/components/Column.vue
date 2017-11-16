@@ -39,7 +39,7 @@
           state = event.target.closest('div.drag-wrapper').dataset.state;
         }
         const index = event.dataTransfer.getData('index');
-        this.$store.commit('changeTaskState', { index, state });
+        this.$store.dispatch('changeTaskState', { index, state });
       },
       dragStart(event) {
         event.dataTransfer.setData('index', event.target.dataset.index);
