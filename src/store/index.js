@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import * as firebase from 'firebase';
-// import moment from 'moment';
+import moment from 'moment';
 
 Vue.use(Vuex);
 
@@ -13,7 +13,8 @@ export default {
       doneTasks: [],
       user: null,
       signError: null,
-      date: '2017-11-14',
+      date: moment().format('YYYY-MM-DD'),
+      dates: [moment().format('YYYY-MM-DD')],
       typeOfTasks: 'DispalyAllTasks',
       queryText: '',
       loading: false,
@@ -46,6 +47,9 @@ export default {
       changeTaskState(state, payload) {
         state.tasks[state.date][payload.index].state // eslint-disable-line no-param-reassign
           = payload.state;
+      },
+      setDate(state, payload) {
+        state.date = payload; // eslint-disable-line no-param-reassign
       },
     },
     actions: {
@@ -95,6 +99,7 @@ export default {
               commit('setLoading', false);
               return;
             }
+            state.dates.push(Object.keys(obj)); // eslint-disable-line no-param-reassign
             Object.keys(obj).forEach((date) => {
               tasks[date] = [];
               Object.keys(obj[date]).forEach(key => tasks[date].push(obj[date][key]));
@@ -182,10 +187,13 @@ export default {
           .filter(task => task.state === taskState),
       columnDetails(_, getters) {
         return {
-          undone: { name: 'Daily Tasks', numberOfTasks: getters.taskByState('undone').length, icon: 'bug_report', state: 'undone' },
-          onprogress: { name: 'On Progress', numberOfTasks: getters.taskByState('onprogress').length, icon: 'alarm', state: 'onprogress' },
-          done: { name: 'Done', numberOfTasks: getters.taskByState('done').length, icon: 'lightbulb_outline', state: 'done' },
+          undone: { name: 'Daily Tasks', type: 'Tasks To Be Done', numberOfTasks: getters.taskByState('undone').length, icon: 'bug_report', state: 'undone' },
+          onprogress: { name: 'On Progress', type: 'Tasks On Progess', numberOfTasks: getters.taskByState('onprogress').length, icon: 'alarm', state: 'onprogress' },
+          done: { name: 'Done', type: 'Done Tasks', numberOfTasks: getters.taskByState('done').length, icon: 'lightbulb_outline', state: 'done' },
         };
+      },
+      dates(state) {
+        return state.dates;
       },
     },
   }),

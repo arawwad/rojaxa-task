@@ -18,13 +18,20 @@
             <v-menu transition="slide-y-reverse-transition">
               <v-btn round class="btn" dark slot="activator"><v-icon class="mr-2">list</v-icon>{{ typeOfTasks }}<v-icon class="ml-2">keyboard_arrow_down</v-icon> </v-btn>
               <v-list>
-                <v-list-tile v-for="(type, i) in typesOfTasks" v-if="type !== typeOfTasks" :key="i" @click="changeTypeOfTask(type)">
+                <v-list-tile v-for="(type, i) in typesOfTasks" v-if="type !== typeOfTasks"  :key="i" @click="changeTypeOfTask(type)">
                   <v-list-tile-title v-text="type"></v-list-tile-title>
                 </v-list-tile>
               </v-list>
             </v-menu>
 
-            <v-btn round class="btn" dark><v-icon class="mr-3">date_range</v-icon>Today's Tasks <v-icon class="ml-3">keyboard_arrow_down</v-icon></v-btn>
+            <v-menu transition="slide-y-reverse-transition">
+              <v-btn round class="btn" dark slot="activator"><v-icon class="mr-3">date_range</v-icon>{{ currentDay }}<v-icon class="ml-3">keyboard_arrow_down</v-icon></v-btn>
+              <v-list>
+                <v-list-tile v-for="(date, i) in dates" :key="i" @click="changeDate(date)">
+                  <v-list-tile-title v-text="date"></v-list-tile-title>
+                </v-list-tile>
+              </v-list>
+            </v-menu>
             <v-spacer></v-spacer>
             <v-text-field
               single-line
@@ -33,9 +40,10 @@
               @keydown="queryTasks"
               prepend-icon="search"
               placeholder="Search For Tasks"
-            ></v-text-field>          </v-layout>
+            ></v-text-field>
+          </v-layout>
           <v-layout row wrap justify-center>
-            <column v-for="(column,i) in columnDetails" :tasks="taskByState(column.state)" :columnDetails="column">
+            <column v-for="(column,i) in columnDetails" :tasks="taskByState(column.state)" :columnDetails="column" v-if="displayTypeOfTasks(column.type)">
             </column>
           </v-layout>
         </v-container>
@@ -44,17 +52,16 @@
 </template>
 
 <script>
+  import moment from 'moment';
   import Column from './Column';
 
   export default {
     data() {
       return {
-        displayedColumns: [{},
-          {},
-          {}],
-        typesOfTasks: ['Display All Tasks', ' Tasks To Be Done', ' Tasks On Progess', ' Done Tasks'],
+        typesOfTasks: ['Display All Tasks', 'Tasks To Be Done', 'Tasks On Progess', 'Done Tasks'],
         typeOfTasks: 'Display All Tasks',
         queryText: '',
+        currentDay: moment().format('YYYY-MM-DD'),
       };
     },
     components: {
@@ -71,6 +78,17 @@
       taskByState(taskState) {
         return this.$store.getters.taskByState(taskState);
       },
+      changeDate(date) {
+        this.$store.commit('setDate', date);
+      },
+      displayTypeOfTasks(type) {
+        if (this.typeOfTasks === 'Display All Tasks') {
+          return true;
+        } else if (this.typeOfTasks === type) {
+          return true;
+        }
+        return false;
+      },
     },
     computed: {
       user() {
@@ -82,13 +100,8 @@
       columnDetails() {
         return this.$store.getters.columnDetails;
       },
-      currentDayTasks: {
-        get() {
-          return this.$store.getters.currentDayTasks;
-        },
-        set() {
-
-        },
+      dates() {
+        return this.$store.getters.dates;
       },
     },
   };
